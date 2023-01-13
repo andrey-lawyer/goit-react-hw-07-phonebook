@@ -1,9 +1,11 @@
-import { useSelector } from 'react-redux';
-
+import { useSelector, useDispatch } from 'react-redux';
 import { selectContacts } from './redux/contacts/selectContacts';
-import { selectFilter } from './redux/filter/selectFilter';
 
 import ContactForm from './components/Form';
+import { useEffect } from 'react';
+
+import { fetchContacts } from './redux/contacts/contactOperations';
+
 import ContactList from './components/ListContacts';
 import Filter from './components/Filter';
 
@@ -11,16 +13,13 @@ import { PhoneBook, TitleH1, TitleH2, Message } from 'App.styled';
 
 const App = () => {
   const contacts = useSelector(selectContacts);
-  const filter = useSelector(selectFilter);
 
-  const getVisibleContacts = () => {
-    const normalizedFilter = filter.toLowerCase();
-    return contacts.filter(contact =>
-      contact.name.toLowerCase().includes(normalizedFilter)
-    );
-  };
+  const dispatch = useDispatch();
 
-  const visibleContacts = getVisibleContacts();
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
+
   return (
     <PhoneBook>
       <TitleH1>Phonebook</TitleH1>
@@ -30,8 +29,8 @@ const App = () => {
         <Message>Your phone book is empty, add a contact</Message>
       ) : (
         <>
-          <Filter value={filter} />
-          <ContactList contacts={visibleContacts} />
+          <Filter />
+          <ContactList />
         </>
       )}
     </PhoneBook>

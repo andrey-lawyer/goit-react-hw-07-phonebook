@@ -1,23 +1,26 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
-import PropTypes from 'prop-types';
 import { nanoid } from 'nanoid';
 
 import { filterContact } from '../../redux/filter/filterSlice';
+import { selectFilter } from '../../redux/filter/selectFilter';
 
 import { FieldInput, InputFind } from './Filter.styled';
 
 const idUser = nanoid();
-const Filter = ({ value }) => {
+
+const Filter = () => {
+  const filter = useSelector(selectFilter);
   const dispatch = useDispatch();
+
   return (
     <FieldInput>
       <label htmlFor={idUser}>Find contacts by name</label>
       <InputFind
         id={idUser}
         type="text"
-        value={value}
+        value={filter}
         onChange={e => dispatch(filterContact(e.currentTarget.value))}
       />
     </FieldInput>
@@ -25,6 +28,3 @@ const Filter = ({ value }) => {
 };
 
 export default Filter;
-Filter.propTypes = {
-  value: PropTypes.string.isRequired,
-};
