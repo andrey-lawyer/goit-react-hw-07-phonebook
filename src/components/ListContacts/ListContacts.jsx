@@ -9,10 +9,10 @@ import {
   ItemContact,
   NameUser,
   ListContacts,
+  Phone,
 } from './ListContacts.styled';
 
 const ContactList = () => {
-
   const dispatch = useDispatch();
   const visibleContacts = useSelector(selectGetVisibleContacts);
 
@@ -21,7 +21,7 @@ const ContactList = () => {
       {visibleContacts.map(({ name, phone, id }) => (
         <ItemContact key={id}>
           <NameUser>{name}:</NameUser>
-          <span>{phone}</span>
+          <Phone>{phone}</Phone>
           <ButtonDel type="button" onClick={() => dispatch(deleteContact(id))}>
             Delete
           </ButtonDel>

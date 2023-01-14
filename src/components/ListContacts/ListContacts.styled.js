@@ -11,6 +11,11 @@ export const ItemContact = styled.li`
 `;
 export const NameUser = styled.p`
   margin: 0;
+  width: 160px;
+`;
+export const Phone = styled.p`
+  margin: 0;
+  width: 180px;
 `;
 export const ButtonDel = styled.button`
   margin-right: 20px;
