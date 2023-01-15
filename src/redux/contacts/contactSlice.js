@@ -1,6 +1,20 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { fetchContacts, addContact, deleteContact } from './contactOperations';
 
+function pending(state) {
+  state.isLoading = true;
+}
+
+function rejected(state, { payload }) {
+  state.isLoading = false;
+  state.error = payload;
+}
+
+function fulfilled(state) {
+  state.isLoading = false;
+  state.error = null;
+}
+
 const contactSlice = createSlice({
   name: 'contact',
   initialState: {
@@ -9,46 +23,26 @@ const contactSlice = createSlice({
     error: null,
   },
   extraReducers: {
-    [addContact.pending]: state => {
-      state.isLoading = true;
+    [addContact.pending]: pending,
+    [fetchContacts.pending]: pending,
+    [deleteContact.pending]: pending,
+
+    [fetchContacts.fulfilled]: (state, { payload }) => {
+      state.items = payload;
+      fulfilled(state);
     },
     [addContact.fulfilled]: (state, { payload }) => {
       state.items.push(payload);
-      state.isLoading = false;
-      state.error = null;
-    },
-    [addContact.rejected]: (state, { payload }) => {
-      state.isLoading = false;
-      state.error = payload;
-    },
-
-    [fetchContacts.pending]: state => {
-      state.isLoading = true;
-    },
-    [fetchContacts.fulfilled]: (state, { payload }) => {
-      state.items = payload;
-
-      state.isLoading = false;
-      state.error = null;
-    },
-    [fetchContacts.rejected]: (state, { payload }) => {
-      state.isLoading = false;
-      state.error = payload;
-    },
-
-    [deleteContact.pending]: state => {
-      state.isLoading = true;
+      fulfilled(state);
     },
     [deleteContact.fulfilled]: (state, { payload }) => {
       state.items = state.items.filter(contact => contact.id !== payload);
-      state.isLoading = false;
-      state.error = null;
+      fulfilled(state);
     },
-    [deleteContact.rejected]: (state, { payload }) => {
-      state.isLoading = false;
-      console.log(payload);
-      state.error = payload;
-    },
+
+    [fetchContacts.rejected]: rejected,
+    [addContact.rejected]: rejected,
+    [deleteContact.rejected]: rejected,
   },
 });
 
